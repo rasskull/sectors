@@ -14,10 +14,17 @@ stock tickers held by each fund.
    pip install -r requirements.txt
    ```
 
-2. Add ETF symbols and their corresponding daily holdings URLs to the
-   `ETFS` dictionary in `aggregator.py`.
+2. Add ETF symbols to the `ETFS` list in `aggregator.py`.
 
-3. Run the script:
+3. Optionally generate a JSON file for the website:
+
+   ```bash
+   python aggregator.py --json
+   ```
+
+   This will create `site/holdings.json` which the static site reads at runtime.
+
+4. Run the script:
 
    ```bash
    python aggregator.py
@@ -26,16 +33,16 @@ stock tickers held by each fund.
    Example output:
 
    ```text
-   Fetching holdings for XLV...
-   XLV: JOHNSON & JOHNSON,PFIZER,MERCK & CO INC,...
+   Fetching holdings URL for XLV...
+   Downloading holdings for XLV from https://www.ssga.com/us/en/individual/library-content/products/fund-data/etfs/us/holdings-daily-us-en-xlv.xlsx...
+   XLV: LLY,JNJ,ABBV,MRK,UNH,AMGN,ABT,TMO,GILD,ISRG,PFE,SYK,DHR,BMY,MDT,VRTX,MCK,BSX,CVS,HCA,REGN,CI,COR,ELV,ZTS,CAH,IDXX,BDX,EW,RMD,GEHC,A,WAT,IQV,BIIB,DXCM,MTD,STE,LH,DGX,HUM,CNC,ZBH,MRNA,WST,HOLX,PODD,VTRS,INCY,COO,ALGN,UHS,RVTY,SOLV,BAX,CRL,TECH,HSIC,MOH,DVA,IXCH6
    ```
 
 ## Extending
 
-- Additional ETFs can be added by extending the `ETFS` mapping.
-- The script currently looks for a column whose name includes
-  "ticker"; modify `tickers_from_df` if your files are structured
-differently.
+- Additional ETFs can be added by extending the `ETFS` list with symbol strings.
+- The script automatically constructs the holdings URL using SSGA's standard pattern.
+- If the URL pattern changes, update `get_holdings_url` accordingly.
 
 ## Simple Dark-theme Website
 
@@ -55,6 +62,4 @@ can be added if you want to control the output folder:
 
 ## Notes
 
-The ETFs used by the US sectors are typically provided by State Street
-Global Advisors (SSGA) and the URLs change daily; be sure you are using
-the correct link for each fund.
+The holdings URLs follow a predictable pattern (`holdings-daily-us-en-{symbol}.xlsx`), and SSGA updates the content daily. The script constructs these URLs automatically, so no manual URL updates are needed.

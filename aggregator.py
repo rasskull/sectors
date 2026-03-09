@@ -10,19 +10,28 @@ Extend the `ETFS` dictionary with additional ticker names and URLs.
 """
 
 import io
+import json
 import sys
-from typing import Dict
+from typing import Dict, List
 
 import pandas as pd
 import requests
 
-# mapping of ETF symbol -> holdings file URL
-ETFS: Dict[str, str] = {
-    # healthcare sector ETF (example provided by user)
-    "XLV": "https://www.ssga.com/us/en/individual/library-content/products/fund-data/etfs/us/holdings-daily-us-en-xlv.xlsx",
-    # add other sector ETF URLs here
-    # "XLF": "https://...",
-}
+# list of ETF symbols to process
+ETFS: List[str] = [
+    "XLV",  # healthcare
+    # add other sector ETF symbols here, e.g.:
+    # "XLF",  # financials
+]
+
+
+def get_holdings_url(symbol: str) -> str:
+    """Construct the holdings Excel URL based on SSGA's naming pattern.
+    
+    SSGA uses URLs like holdings-daily-us-en-{symbol}.xlsx, which appear
+    to be updated daily with the latest data.
+    """
+    return f"https://www.ssga.com/us/en/individual/library-content/products/fund-data/etfs/us/holdings-daily-us-en-{symbol.lower()}.xlsx"
 
 
 def fetch_holdings(url: str) -> pd.DataFrame:
@@ -66,14 +75,16 @@ import json
 def main(write_json: bool = False) -> None:
     results: Dict[str, list[str]] = {}
 
-    for symbol, url in ETFS.items():
+    for symbol in ETFS:
         try:
-            print(f"Fetching holdings for {symbol}...")
+            print(f"Fetching holdings URL for {symbol}...")
+            url = get_holdings_url(symbol)
+            print(f"Downloading holdings for {symbol} from {url}...")
             df = fetch_holdings(url)
             tickers = tickers_from_df(df)
-            symbols = tickers.tolist()
-            results[symbol] = symbols
-            csv = ",".join(symbols)
+            symbols_list = tickers.tolist()
+            results[symbol] = symbols_list
+            csv = ",".join(symbols_list)
             print(f"{symbol}: {csv}\n")
         except Exception as exc:
             print(f"Error processing {symbol}: {exc}", file=sys.stderr)
