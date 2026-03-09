@@ -98,9 +98,9 @@ def main(write_json: bool = False) -> None:
             print(f"Error processing {symbol}: {exc}", file=sys.stderr)
 
     if write_json:
-        with open("site/holdings.json", "w") as f:
+        with open("holdings.json", "w") as f:
             json.dump(results, f, indent=2)
-        print("Wrote site/holdings.json")
+        print("Wrote holdings.json")
 
 
 if __name__ == "__main__":
