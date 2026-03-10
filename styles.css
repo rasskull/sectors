@@ -20,3 +20,17 @@ section {
   border-bottom: 1px solid #333;
   padding-bottom: 1rem;
 }
+
+button {
+  margin-right: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #bb86fc;
+  color: #121212;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #9c6ade;
+}

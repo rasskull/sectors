@@ -20,7 +20,14 @@
         container.innerHTML = '';
         for (const [symbol, tickers] of Object.entries(data)) {
           const section = document.createElement('section');
-          section.innerHTML = `<h2>${symbol}</h2><p>${tickers.join(', ')}</p>`;
+          const csv = tickers.join(', ');
+          const noCommas = tickers.join(' ');
+          section.innerHTML = `
+            <h2>${symbol}</h2>
+            <p>${csv}</p>
+            <button onclick="copyToClipboard('${csv.replace(/'/g, "\\'")}')">Copy with Commas</button>
+            <button onclick="copyToClipboard('${noCommas.replace(/'/g, "\\'")}')">Copy without Commas</button>
+          `;
           container.appendChild(section);
         }
       } catch (err) {
@@ -28,6 +35,15 @@
         console.error(err);
       }
     }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Copied to clipboard!');
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+      });
+    }
+
     loadHoldings();
   </script>
 </body>
