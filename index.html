@@ -25,8 +25,8 @@
           section.innerHTML = `
             <h2>${symbol}</h2>
             <p>${csv}</p>
-            <button onclick="copyToClipboard('${csv.replace(/'/g, "\\'")}')">Copy with Commas</button>
-            <button onclick="copyToClipboard('${noCommas.replace(/'/g, "\\'")}')">Copy without Commas</button>
+            <button onclick="copyToClipboard('${csv.replace(/'/g, "\\'")}', '${symbol}')">Copy with Commas</button>
+            <button onclick="copyToClipboard('${noCommas.replace(/'/g, "\\'")}', '${symbol}')">Copy without Commas</button>
           `;
           container.appendChild(section);
         }
@@ -36,9 +36,9 @@
       }
     }
 
-    function copyToClipboard(text) {
+    function copyToClipboard(text, symbol) {
       navigator.clipboard.writeText(text).then(() => {
-        alert('Copied to clipboard!');
+        alert(`Copied ${symbol} to clipboard!`);
       }).catch(err => {
         console.error('Failed to copy: ', err);
       });
